@@ -11,5 +11,20 @@
 MODULE CheckSignal(red,green,unsafe)
   -- Add specifications below.
   -- Whenever the situation is unsafe, the signal must show red.
-  -- etc.
+  -- Proper behavior of the signals.
 
+LTLSPEC
+  G red -> !green
+LTLSPEC
+  G green -> !red
+LTLSPEC
+  G unsafe -> red
+
+  -- Proper behavior of the warning devices and barriers.
+  -- Trains always make progress.
+  -- Cars always make progress.
+  -- Several use cases for the environment: E.g.
+  -- { Regardless of the history, the environment can evolve into a situation where no
+  -- trains are visible.
+  -- { Regardless of the history, the environment can evolve into a situation where a train
+  -- is crossing the road.
