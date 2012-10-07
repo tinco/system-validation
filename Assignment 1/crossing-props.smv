@@ -1,0 +1,15 @@
+  VAR
+    check_S1 : CheckSignal(S1_red,S1_green,FALSE);
+    check_S2 : CheckSignal(S2_red,S2_green,T2_occupied|T3_occupied);
+    check_S3 : CheckSignal(S3_red,S3_green,T2_occupied|T1_occupied);
+    check_S4 : CheckSignal(S4_red,S4_green,FALSE);
+
+-- Check properties of a signal.
+-- red    : signal is red.
+-- green  : signal is green.
+-- unsafe : if TRUE then it is unsafe to pass this signal.
+MODULE CheckSignal(red,green,unsafe)
+  -- Add specifications below.
+  -- Whenever the situation is unsafe, the signal must show red.
+  -- etc.
+
