@@ -3,6 +3,7 @@
     check_S2 : CheckSignal(S2_red,S2_green,T2_occupied|T3_occupied);
     check_S3 : CheckSignal(S3_red,S3_green,T2_occupied|T1_occupied);
     check_S4 : CheckSignal(S4_red,S4_green,FALSE);
+    check_B : CheckBarriers(B1_closed, B2_closed, T1_occupied, T2_occupied, T3_occupied);
 
 -- Check properties of a signal.
 -- red    : signal is red.
@@ -13,12 +14,18 @@ MODULE CheckSignal(red,green,unsafe)
   -- Whenever the situation is unsafe, the signal must show red.
   -- Proper behavior of the signals.
 
-LTLSPEC
-  G red -> !green
-LTLSPEC
-  G green -> !red
-LTLSPEC
-  G unsafe -> red
+LTLSPEC -- Both lights should not be on at the same time
+  G (red = !green)
+
+LTLSPEC -- Light should be red in unsafe situation
+  G (unsafe -> red)
+
+MODULE CheckBarriers(barrier_1, barrier_2, track_1, track_2, track_3)
+
+LTLSPEC -- If there's a train in the middle of the crossing
+        -- the barriers should be lowered
+  G (track_2 -> barrier_1 & barrier_2)
+
 
   -- Proper behavior of the warning devices and barriers.
   -- Trains always make progress.
