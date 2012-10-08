@@ -1,37 +1,77 @@
   VAR
-    check_S1 : CheckSignal(S1_red,S1_green,FALSE);
-    check_S2 : CheckSignal(S2_red,S2_green,T2_occupied|T3_occupied);
-    check_S3 : CheckSignal(S3_red,S3_green,T2_occupied|T1_occupied);
-    check_S4 : CheckSignal(S4_red,S4_green,FALSE);
-    check_B : CheckBarriers(B1_closed, B2_closed, T1_occupied, T2_occupied, T3_occupied);
+    checkSignalSanity1 : CheckSignalSanity(S1_red, S1_green);
+    checkSignalSanity2 : CheckSignalSanity(S2_red, S2_green);
+    checkSignalSanity3 : CheckSignalSanity(S3_red, S3_green);
+    checkSignalSanity4 : CheckSignalSanity(S4_red, S4_green);
 
--- Check properties of a signal.
--- red    : signal is red.
--- green  : signal is green.
--- unsafe : if TRUE then it is unsafe to pass this signal.
-MODULE CheckSignal(red,green,unsafe)
-  -- Add specifications below.
-  -- Whenever the situation is unsafe, the signal must show red.
-  -- Proper behavior of the signals.
+    check_S1 : CheckSignal(S1_red, FALSE);
+    check_S2 : CheckSignal(S2_red, T2_occupied|T3_occupied);
+    check_S3 : CheckSignal(S3_red, T2_occupied|T1_occupied);
+    check_S4 : CheckSignal(S4_red, FALSE);
+    checkBarriers : CheckBarriers(B1_closed, B2_closed, T1_occupied, T2_occupied, T3_occupied);
+    checkTrains : CheckTrains(T1_occupied, T2_occupied, T3_occupied);
+    checkWarningDevices : CheckWarningDevices(T1_occupied, T2_occupied, T3_occupied, W1_active, W2_active);
+    checkCarsCrossing : CheckCarsCrossing(cars_crossing, T2_occupied);
 
+MODULE CheckSignalSanity(red,green)
 LTLSPEC -- Both lights should not be on at the same time
   G (red = !green)
 
+-- Check properties of a signal.
+-- red    : signal is red.
+-- unsafe : if TRUE then it is unsafe to pass this signal.
+MODULE CheckSignal(red,unsafe)
 LTLSPEC -- Light should be red in unsafe situation
   G (unsafe -> red)
 
+MODULE CheckCarsCrossing(cars, train)
+LTLSPEC -- Never should cars be crossing when there is a train on the crossing
+  G !(train & cars)
+
+CTLSPEC -- It should always be possible that cars eventually cross
+  EF cars
+
 MODULE CheckBarriers(barrier_1, barrier_2, track_1, track_2, track_3)
 
-LTLSPEC -- If there's a train in the middle of the crossing
+LTLSPEC -- If theres a train in the middle of the crossing
         -- the barriers should be lowered
   G (track_2 -> barrier_1 & barrier_2)
 
+LTLSPEC -- The barriers should eventually open
+  G (barrier_1 -> F !barrier_1)
+LTLSPEC
+  G (barrier_2 -> F !barrier_2)
 
-  -- Proper behavior of the warning devices and barriers.
-  -- Trains always make progress.
-  -- Cars always make progress.
-  -- Several use cases for the environment: E.g.
-  -- { Regardless of the history, the environment can evolve into a situation where no
-  -- trains are visible.
-  -- { Regardless of the history, the environment can evolve into a situation where a train
-  -- is crossing the road.
+MODULE CheckWarningDevices(track_1, track_2, track_3, w1, w2)
+LTLSPEC -- Warnings should sound when a train is coming
+  G (X track_2 -> w1 & w2)
+
+LTLSPEC -- Warnings should eventually stop
+  G (w1 -> F !w1)
+
+LTLSPEC
+  G (w2 -> F !w2)
+
+-- LTLSPEC -- Warnings should stop when train has passed and no train is coming
+--   G ((Y track_2) & !track_2 & X track_2 -> !w1 & !w2)
+--
+-- LTLSPEC -- warnings should stop when there are no trains
+--   G (!X track_1 & !X track_2 & !X track_3 -> !w1 & !w2)
+
+MODULE CheckTrains(track_1, track_2, track_3)
+LTLSPEC -- Trains make progress
+  G (track_1 -> F !track_1)
+
+LTLSPEC -- Trains make progress
+  G (track_2 -> F !track_2)
+
+LTLSPEC -- Trains make progress
+  G (track_3 -> F !track_3)
+
+CTLSPEC -- Regardless of the history, the environment can evolve into a situation where no
+        -- trains are visible.
+  EF (!track_1 & !track_2 & !track_3)
+
+CTLSPEC -- Regardless of the history, the environment can evolve into a situation where a
+        -- train crosses the road.
+  EF (track_2)
