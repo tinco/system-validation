@@ -49,20 +49,30 @@ MODULE Car(W1_active, W2_active)
 MODULE Barrier(request)
   VAR
     open : boolean;
+    closing : boolean;
     closed : boolean;
   ASSIGN
     init(open)       := TRUE;
     init(closed)     := FALSE;
+    init(closing)    := FALSE;
 
     -- open    -> !open   -> !open  -> !open   -> open
     -- !closed -> !closed -> closed -> !closed -> !closed
-    next(open)   := case
+    -- !closing-> closing -> !closing -> !closing -> !closing
+    next(open)  := case
        request : FALSE;
        !request & !closed : TRUE;
        TRUE : open;
     esac;
+
+    next(closing) := case
+      request & !closed : TRUE;
+      TRUE : FALSE;
+    esac;
+
     next(closed) := case
-       request & !open : TRUE;
+       closing : {TRUE,FALSE};
+       closed & request : TRUE;
        TRUE : FALSE;
     esac;
 
