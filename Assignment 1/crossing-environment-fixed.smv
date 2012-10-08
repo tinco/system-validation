@@ -1,0 +1,82 @@
+MODULE Environment(
+         S2_red,S2_green,
+         S3_red,S3_green,
+         W1_active,W2_active,
+         B1_request,B2_request)
+  VAR
+    T0_occupied : boolean;
+    T1_occupied : boolean;
+    T2_occupied : boolean;
+    T3_occupied : boolean;
+    T4_occupied : boolean;
+    cars_crossing : boolean;
+    B1_open : boolean;
+    B1_closed : boolean;
+    B2_open : boolean;
+    B2_closed : boolean;
+  DEFINE
+    S1_red := T0_occupied;
+    S1_green := !S1_red;
+    S4_red := T4_occupied;
+    S4_green := !S4_red;
+
+  ASSIGN
+    init(T0_occupied)   := FALSE;
+    init(T1_occupied)   := FALSE;
+    init(T2_occupied)   := FALSE;
+    init(T3_occupied)   := FALSE;
+    init(T4_occupied)   := FALSE;
+    init(cars_crossing) := FALSE;
+    next(T0_occupied)   := case
+      !(T0_occupied|T1_occupied|T2_occupied|T3_occupied) : {TRUE,FALSE};
+      TRUE : FALSE;
+    esac;
+    next(T1_occupied)   := case
+      T0_occupied : TRUE;
+      S2_green : FALSE;
+      TRUE : T1_occupied;
+    esac;
+    next(T2_occupied)   := case
+      T1_occupied & S2_green : TRUE;
+      TRUE : FALSE;
+    esac;
+    next(T3_occupied)   := case
+      T2_occupied : TRUE;
+      TRUE : FALSE;
+    esac;
+    next(T4_occupied)   := case
+      T3_occupied : TRUE;
+      TRUE : FALSE;
+    esac;
+
+    next(cars_crossing) := case
+      !W1_active | !W2_active : {TRUE,FALSE};
+      TRUE : FALSE;
+    esac;
+
+    init(B1_open)       := TRUE;
+    init(B1_closed)     := FALSE;
+    next(B1_open)   := case
+       B1_request : FALSE;
+       !B1_request & !B1_closed : TRUE;
+       TRUE : B1_open;
+    esac;
+    next(B1_closed) := case
+       B1_request & !B1_open : TRUE;
+       TRUE : FALSE;
+    esac;
+    
+    init(B2_open)       := TRUE;
+    init(B2_closed)     := FALSE;
+    next(B2_open)   := case
+       B2_request : FALSE;
+       !B2_request & !B2_closed : TRUE;
+       TRUE : B2_open;
+    esac;
+    next(B2_closed) := case
+       B2_request & !B2_open : TRUE;
+       TRUE : FALSE;
+    esac;
+
+
+

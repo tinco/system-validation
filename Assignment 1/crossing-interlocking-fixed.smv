@@ -1,0 +1,46 @@
+MODULE Interlocking(
+                     T1_occupied,T2_occupied,T3_occupied,
+                     S1_red,S1_green,
+                     S4_red,S4_green,
+                     B1_open,B1_closed,
+                     B2_open,B2_closed)
+  VAR
+    S2_red : boolean;
+    S3_red : boolean;
+    B_request : boolean;
+    W_active  : boolean;
+  DEFINE
+    S2_green := !S2_red;
+    S3_green := !S3_red;
+    B1_request := B_request;
+    B2_request := B_request;
+    W1_active  := W_active;
+    W2_active  := W_active;
+
+  ASSIGN
+    init(S2_red)        := TRUE;
+    init(S3_red)        := TRUE;
+    init(B_request)     := FALSE;
+    init(W_active)      := FALSE;
+    next(W_active)      := case
+        T1_occupied | T3_occupied : TRUE;
+        W_active & ( T2_occupied | !B1_open | !B2_open ) : TRUE;
+        TRUE : FALSE;
+    esac;
+    
+    next(S2_red)        := case
+        T2_occupied | T3_occupied : TRUE;
+        !B1_closed  : TRUE;
+        TRUE : FALSE;
+    esac;
+    next(S3_red)        := case
+        T1_occupied | T2_occupied : TRUE;
+        !B1_closed  : TRUE;
+        TRUE : FALSE;
+    esac;
+    next(B_request)    := case
+        (T1_occupied | T2_occupied | T3_occupied) & W_active : TRUE;
+        !(T1_occupied | T2_occupied | T3_occupied) : FALSE;
+        TRUE : B_request;
+    esac;
+
