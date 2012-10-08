@@ -22,37 +22,44 @@ LTLSPEC -- Both lights should not be on at the same time
 -- unsafe : if TRUE then it is unsafe to pass this signal.
 MODULE CheckSignal(red,unsafe)
 LTLSPEC -- Light should be red in unsafe situation
+        -- Safety property
   G (unsafe -> red)
 
 MODULE CheckCarsCrossing(cars, train)
 LTLSPEC -- Never should cars be crossing when there is a train on the crossing
+        -- Safety property
   G !(train & cars)
 
 CTLSPEC -- It should always be possible that cars eventually cross
+        -- Liveness property
   EF cars
 
 MODULE CheckBarriers(barrier_1, barrier_2, track_1, track_2, track_3)
 
 LTLSPEC -- If theres a train in the middle of the crossing
         -- the barriers should be lowered
+        -- Safety property
   G (track_2 -> barrier_1 & barrier_2)
 
 LTLSPEC -- The barriers should eventually open
+        -- Liveness property
   G (barrier_1 -> F !barrier_1)
 LTLSPEC
   G (barrier_2 -> F !barrier_2)
 
 MODULE CheckWarningDevices(track_1, track_2, track_3, w1, w2)
 LTLSPEC -- Warnings should sound when a train is coming
+        -- Safety property
   G (X track_2 -> w1 & w2)
 
 LTLSPEC -- Warnings should eventually stop
+        -- Liveness property
   G (w1 -> F !w1)
-
 LTLSPEC
   G (w2 -> F !w2)
 
 -- LTLSPEC -- Warnings should stop when train has passed and no train is coming
+-- Liveness property
 --   G ((Y track_2) & !track_2 & X track_2 -> !w1 & !w2)
 --
 -- LTLSPEC -- warnings should stop when there are no trains
@@ -60,6 +67,7 @@ LTLSPEC
 
 MODULE CheckTrains(track_1, track_2, track_3)
 LTLSPEC -- Trains make progress
+        -- Liveness property
   G (track_1 -> F !track_1)
 
 LTLSPEC -- Trains make progress
@@ -70,8 +78,10 @@ LTLSPEC -- Trains make progress
 
 CTLSPEC -- Regardless of the history, the environment can evolve into a situation where no
         -- trains are visible.
+        -- Liveness property
   EF (!track_1 & !track_2 & !track_3)
 
 CTLSPEC -- Regardless of the history, the environment can evolve into a situation where a
         -- train crosses the road.
+        -- Liveness property
   EF (track_2)
