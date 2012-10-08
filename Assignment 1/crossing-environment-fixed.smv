@@ -1,24 +1,10 @@
-MODULE Environment(
-         S2_red,S2_green,
-         S3_red,S3_green,
-         W1_active,W2_active,
-         B1_request,B2_request)
+MODULE Track(S2_green)
   VAR
     T0_occupied : boolean;
     T1_occupied : boolean;
     T2_occupied : boolean;
     T3_occupied : boolean;
     T4_occupied : boolean;
-    cars_crossing : boolean;
-    B1_open : boolean;
-    B1_closed : boolean;
-    B2_open : boolean;
-    B2_closed : boolean;
-  DEFINE
-    S1_red := T0_occupied;
-    S1_green := !S1_red;
-    S4_red := T4_occupied;
-    S4_green := !S4_red;
 
   ASSIGN
     init(T0_occupied)   := FALSE;
@@ -26,7 +12,7 @@ MODULE Environment(
     init(T2_occupied)   := FALSE;
     init(T3_occupied)   := FALSE;
     init(T4_occupied)   := FALSE;
-    init(cars_crossing) := FALSE;
+
     next(T0_occupied)   := case
       !(T0_occupied|T1_occupied|T2_occupied|T3_occupied) : {TRUE,FALSE};
       TRUE : FALSE;
@@ -49,34 +35,58 @@ MODULE Environment(
       TRUE : FALSE;
     esac;
 
+MODULE Car(W1_active, W2_active)
+  VAR
+    cars_crossing : boolean;
+  ASSIGN
+    init(cars_crossing) := FALSE;
+
     next(cars_crossing) := case
       !W1_active | !W2_active : {TRUE,FALSE};
       TRUE : FALSE;
     esac;
 
-    init(B1_open)       := TRUE;
-    init(B1_closed)     := FALSE;
-    next(B1_open)   := case
-       B1_request : FALSE;
-       !B1_request & !B1_closed : TRUE;
-       TRUE : B1_open;
+MODULE Barrier(request)
+  VAR
+    open : boolean;
+    closed : boolean;
+  ASSIGN
+    init(open)       := TRUE;
+    init(closed)     := FALSE;
+
+    -- open    -> !open   -> !open  -> !open   -> open
+    -- !closed -> !closed -> closed -> !closed -> !closed
+    next(open)   := case
+       request : FALSE;
+       !request & !closed : TRUE;
+       TRUE : open;
     esac;
-    next(B1_closed) := case
-       B1_request & !B1_open : TRUE;
-       TRUE : FALSE;
-    esac;
-    
-    init(B2_open)       := TRUE;
-    init(B2_closed)     := FALSE;
-    next(B2_open)   := case
-       B2_request : FALSE;
-       !B2_request & !B2_closed : TRUE;
-       TRUE : B2_open;
-    esac;
-    next(B2_closed) := case
-       B2_request & !B2_open : TRUE;
+    next(closed) := case
+       request & !open : TRUE;
        TRUE : FALSE;
     esac;
 
-
+MODULE Environment(
+         S2_red,S2_green,
+         S3_red,S3_green,
+         W1_active,W2_active,
+         B1_request,B2_request)
+  VAR
+    B1 : Barrier(B1_request);
+    B2 : Barrier(B2_request);
+    Track : Track(S2_green);
+    CarsCrossing : Car(W1_active, W2_active);
+  DEFINE
+    S1_red := Track.T0_occupied;
+    S1_green := !S1_red;
+    S4_red := Track.T4_occupied;
+    S4_green := !S4_red;
+    T1_occupied := Track.T1_occupied;
+    T2_occupied := Track.T2_occupied;
+    T3_occupied := Track.T3_occupied;
+    cars_crossing := CarsCrossing.cars_crossing;
+    B1_open    := B1.open ;
+    B1_closed  := B1.closed ;
+    B2_open    := B2.open ;
+    B2_closed  := B2.closed ;
 
