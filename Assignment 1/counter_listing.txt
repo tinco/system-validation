@@ -1,0 +1,124 @@
+-- specification  G (track_1 ->  F !track_1) IN checkTrains   is false
+-- as demonstrated by the following execution sequence
+Trace Description: BMC Counterexample 
+Trace Type: Counterexample 
+-> State: 1.1 <-
+  T1_occupied = FALSE
+  T2_occupied = FALSE
+  T3_occupied = FALSE
+  cars_crossing = FALSE
+  S1_red = FALSE
+  S1_green = TRUE
+  S2_red = TRUE
+  S2_green = FALSE
+  S3_red = TRUE
+  S3_green = FALSE
+  S4_red = FALSE
+  S4_green = TRUE
+  W1_active = FALSE
+  W2_active = FALSE
+  B1_open = TRUE
+  B1_closed = FALSE
+  B1_request = FALSE
+  B2_open = TRUE
+  B2_closed = FALSE
+  B2_request = FALSE
+# We start with S2 on red and S3 on red
+-> State: 1.2 <-
+  cars_crossing = TRUE
+# A car crosses the tracks.
+-> State: 1.3 <-
+  cars_crossing = FALSE
+  S1_red = TRUE
+  S1_green = FALSE
+  S4_red = TRUE
+  S4_green = FALSE
+# Cars stop crossing, but the signals 1 and 4 go to red
+-- Loop starts here
+-> State: 1.4 <-
+  T1_occupied = TRUE
+  T3_occupied = TRUE
+  cars_crossing = TRUE
+  S1_red = FALSE
+  S1_green = TRUE
+  S4_red = FALSE
+  S4_green = TRUE
+# A train arrives in both T1 and T3, a car crosses again, S1 and S4 go to green
+# lights 1 and 4 go to green
+-> State: 1.5 <-
+  cars_crossing = FALSE
+# A car stops crossing
+-- Loop starts here
+-> State: 1.6 <-
+  cars_crossing = TRUE
+-> State: 1.7 <-
+  cars_crossing = FALSE
+-- Loop starts here
+-> State: 1.8 <-
+  cars_crossing = TRUE
+-> State: 1.9 <-
+  cars_crossing = FALSE
+-> State: 1.10 <-
+  cars_crossing = TRUE
+# Cars cross on and off...
+# The train never gets to leave track 1
+
+# Another counterexample showing the same course of events but for the other way around,
+ the train never leaves track 3 because of cars that keep stopping the trains.
+-- no counterexample found with bound 9 and loop at 3
+-- specification  G (track_3 ->  F !track_3) IN checkTrains   is false
+-- as demonstrated by the following execution sequence
+Trace Description: BMC Counterexample 
+Trace Type: Counterexample 
+-> State: 2.1 <-
+  T1_occupied = FALSE
+  T2_occupied = FALSE
+  T3_occupied = FALSE
+  cars_crossing = FALSE
+  S1_red = FALSE
+  S1_green = TRUE
+  S2_red = TRUE
+  S2_green = FALSE
+  S3_red = TRUE
+  S3_green = FALSE
+  S4_red = FALSE
+  S4_green = TRUE
+  W1_active = FALSE
+  W2_active = FALSE
+  B1_open = TRUE
+  B1_closed = FALSE
+  B1_request = FALSE
+  B2_open = TRUE
+  B2_closed = FALSE
+  B2_request = FALSE
+-> State: 2.2 <-
+  cars_crossing = TRUE
+-> State: 2.3 <-
+  cars_crossing = FALSE
+  S1_red = TRUE
+  S1_green = FALSE
+  S4_red = TRUE
+  S4_green = FALSE
+-- Loop starts here
+-> State: 2.4 <-
+  T1_occupied = TRUE
+  T3_occupied = TRUE
+  cars_crossing = TRUE
+  S1_red = FALSE
+  S1_green = TRUE
+  S4_red = FALSE
+  S4_green = TRUE
+-> State: 2.5 <-
+  cars_crossing = FALSE
+-- Loop starts here
+-> State: 2.6 <-
+  cars_crossing = TRUE
+-> State: 2.7 <-
+  cars_crossing = FALSE
+-- Loop starts here
+-> State: 2.8 <-
+  cars_crossing = TRUE
+-> State: 2.9 <-
+  cars_crossing = FALSE
+-> State: 2.10 <-
+  cars_crossing = TRUE
