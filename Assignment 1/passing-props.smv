@@ -1,0 +1,29 @@
+  VAR
+    check_S1A : CheckSignal(S1A_red, S1A_green, T1A_occupied|T2A_occupied);
+    check_S1B : CheckSignal(S1B_red, S1B_green, T1B_occupied|T2B_occupied);
+    check_Switch1A : CheckSwitch(P1A_goal_straight, P1A_goal_curved, P1A_locked_straight, P1A_locked_curved, S1A_red);
+    check_Switch1B : CheckSwitch(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved, S1B_red);
+    check_Switch2A : CheckSwitch(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved, S2A_red);
+    check_Switch2B : CheckSwitch(P2B_goal_straight, P2B_goal_curved, P2B_locked_straight, P2B_locked_curved, S1B_red);
+
+MODULE CheckSignal(red, green, unsafe)
+  LTLSPEC -- Both lights should not be on at the same time
+    G (red != green)
+
+  LTLSPEC -- Light should be red in unsafe situation
+    G (unsafe -> red)
+
+MODULE CheckSwitch(goal_straight, goal_curved, locked_straight, locked_curved, red)
+  LTLSPEC -- A switch can have only one goal
+    G !(goal_straight & goal_curved)
+
+  LTLSPEC -- A request will not be dropped until it is completed
+    G (goal_straight -> goal_straight U locked_straight
+        & goal_curved -> goal_curved U locked_curved)
+
+  LTLSPEC -- A request will be dropped when it is completed
+    G (goal_straight & X locked_straight -> X !goal_straight
+        & goal_curved & X locked_curved -> X !goal_curved)
+
+  LTLSPEC -- Lights will remain red until the associated switches are locked
+    G (goal_straight | goal_curved -> red U locked_straight | locked_curved)

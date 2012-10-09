@@ -4,4 +4,5 @@ crossing*.smv
 passing*.smv
 !passing-interlocking.smv
 !passing-environment-[1-3].smv
+!passing-props.smv
 !passing.smv
