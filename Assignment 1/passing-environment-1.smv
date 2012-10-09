@@ -68,6 +68,8 @@ MODULE Train(Switch1, Switch2, S1A, S1B, Signals1, Signals2)
     T4B : boolean;
     train : {no, left, right};
     newTrain : {no, left, right};
+
+
   ASSIGN
     init(T1A) := FALSE;
     init(T2A) := FALSE;

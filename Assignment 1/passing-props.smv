@@ -15,6 +15,11 @@
     check_Switch1B : CheckSwitch(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved, S1B_red);
     check_Switch2A : CheckSwitch(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved, S2A_red);
     check_Switch2B : CheckSwitch(P2B_goal_straight, P2B_goal_curved, P2B_locked_straight, P2B_locked_curved, S1B_red);
+    check_TrainProgressionA : CheckTrainProgression(T1A_occupied, T2A_occupied, T3A_occupied, T1B_occupied);
+    check_TrainProgressionB : CheckTrainProgression(T1B_occupied, T2B_occupied, T3A_occupied, T1A_occupied);
+
+    check_AllTracks : CheckAllTracks(T1A_occupied, T2A_occupied, T3A_occupied,
+                                    T1B_occupied,T2B_occupied,T3B_occupied);
 
 MODULE CheckSignal(red, green, unsafe)
   LTLSPEC -- Both lights should not be on at the same time
@@ -41,3 +46,29 @@ MODULE CheckSwitch(goal_straight, goal_curved, locked_straight, locked_curved, r
 
   LTLSPEC -- Lights will remain red until the associated switches are locked
     G (goal_straight | goal_curved -> red U (locked_straight | locked_curved))
+
+MODULE CheckAllTracks(T1A,T2A,T3A,T1B,T2B,T3B)
+LTLSPEC
+  G (T1A xor T2A xor T3A xor T1B xor T2B xor T3B)
+
+MODULE CheckTrainProgression(T1,T2,T3,T4)
+LTLSPEC
+  -- If on Track 1, and the next state is either T1 or T2 (which means it goes from
+  -- left to right), then eventually the track T4 should be true.
+  G (T1 & (X T1 | X T2) -> F T4)
+
+LTLSPEC
+  -- A train never goes backwards, so T1 does not necessarily follow after T2
+  G (T2 & (X T2 | X T3) -> !F T1)
+
+LTLSPEC
+  -- That a train is in T2 means it is going to T3
+  -- Coverage property
+  G (T2 -> X T3)
+
+LTLSPEC
+  -- That a train is in T2 means it does not go to T1
+  G (T2 -> X T1)
+
+LTLSPEC
+  G (T2 & ! T2)
