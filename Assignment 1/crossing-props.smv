@@ -8,7 +8,7 @@
     check_S2 : CheckSignal(S2_red, T2_occupied|T3_occupied);
     check_S3 : CheckSignal(S3_red, T2_occupied|T1_occupied);
     check_S4 : CheckSignal(S4_red, FALSE);
-    checkBarriers : CheckBarriers(B1_closed, B2_closed, T1_occupied, T2_occupied, T3_occupied);
+    checkBarriers : CheckBarriers(B1_closed, B2_closed, B1_open, B2_open, T1_occupied, T2_occupied, T3_occupied);
     checkTrains : CheckTrains(T1_occupied, T2_occupied, T3_occupied);
     checkWarningDevices : CheckWarningDevices(T1_occupied, T2_occupied, T3_occupied, W1_active, W2_active);
     checkCarsCrossing : CheckCarsCrossing(cars_crossing, T2_occupied);
@@ -34,18 +34,27 @@ CTLSPEC -- It should always be possible that cars eventually cross
         -- Liveness property
   EF cars
 
-MODULE CheckBarriers(barrier_1, barrier_2, track_1, track_2, track_3)
+MODULE CheckBarriers(b1_closed, b2_closed, b1_open, b2_open, track_1, track_2, track_3)
 
 LTLSPEC -- If theres a train in the middle of the crossing
         -- the barriers should be lowered
         -- Safety property
-  G (track_2 -> barrier_1 & barrier_2)
+  G (track_2 -> !b1_open & !b2_open)
+
+LTLSPEC
+  G (track_2 -> b1_closed & b2_closed)
 
 LTLSPEC -- The barriers should eventually open
         -- Liveness property
-  G (barrier_1 -> F !barrier_1)
+  G (!b1_open -> F b1_open)
 LTLSPEC
-  G (barrier_2 -> F !barrier_2)
+  G (!b2_open -> F b2_open)
+
+LTLSPEC
+  G (b1_closed -> F !b1_closed)
+
+LTLSPEC
+  G (b2_closed -> F !b2_closed)
 
 MODULE CheckWarningDevices(track_1, track_2, track_3, w1, w2)
 LTLSPEC -- Warnings should sound when a train is coming

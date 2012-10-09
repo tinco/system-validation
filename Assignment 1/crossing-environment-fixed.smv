@@ -51,6 +51,9 @@ MODULE Barrier(request)
     open : boolean;
     closing : boolean;
     closed : boolean;
+
+  FAIRNESS !(closing)
+
   ASSIGN
     init(open)       := TRUE;
     init(closed)     := FALSE;
@@ -60,19 +63,18 @@ MODULE Barrier(request)
     -- !closed -> !closed -> closed -> !closed -> !closed
     -- !closing-> closing -> !closing -> !closing -> !closing
     next(open)  := case
-       request : FALSE;
-       !request & !closed : TRUE;
-       TRUE : open;
+       request | closed | closing : FALSE;
+       TRUE : TRUE;
     esac;
 
     next(closing) := case
-      request & !closed : TRUE;
+      request & !closed : {TRUE, FALSE};
       TRUE : FALSE;
     esac;
 
     next(closed) := case
-       closing : {TRUE,FALSE};
-       closed & request : TRUE;
+       !closed & closing : TRUE;
+       request : TRUE;
        TRUE : FALSE;
     esac;
 
