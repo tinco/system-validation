@@ -1,0 +1,81 @@
+MODULE Interlocking(
+        T1A_occupied,T2A_occupied,T3A_occupied,T4A_occupied,
+        T1B_occupied,T2B_occupied,T3B_occupied,T4B_occupied,
+        S1A_red,S1A_green,S1B_red,S1B_green,
+        P1A_locked_straight,P1A_locked_curved,
+        P1B_locked_straight,P1B_locked_curved,
+        P2A_locked_straight,P2A_locked_curved,
+        P2B_locked_straight,P2B_locked_curved
+    )
+  VAR
+    switch1 : SwitchGoal(T1A_occupied, T2A_occupied, T3B_occupied, S4B_red);
+    switch2 : SwitchGoal(T1B_occupied, T2B_occupied, T3A_occupied, S4A_red);
+    signals1 : Signals(T1A_occupied, T2A_occupied, T3B_occupied);
+    signals2 : Signals(T1B_occupied, T2B_occupied, T3A_occupied);
+  DEFINE
+    S2A_red   := signals1.S1_red;
+    S3A_red   := signals1.S2_red;
+    S4A_red   := signals1.S3_red;
+    S2B_red   := signals2.S1_red;
+    S3B_red   := signals2.S2_red;
+    S4B_red   := signals2.S3_red;
+    S2A_green := !S2A_red;
+    S3A_green := !S3A_red;
+    S4A_green := !S4A_red;
+    S2B_green := !S2B_red;
+    S3B_green := !S3B_red;
+    S4B_green := !S4B_red;
+
+    P1A_goal_straight := switch1.P1_goal_straight;
+    P2B_goal_straight := switch1.P2_goal_straight;
+
+    P1A_goal_curved := switch1.P1_goal_curved;
+    P2B_goal_curved := switch1.P2_goal_curved;
+
+    P2A_goal_straight := switch2.P2_goal_straight;
+    P1B_goal_straight := switch2.P1_goal_straight;
+
+    P2A_goal_curved := switch2.P2_goal_curved;
+    P1B_goal_curved := switch2.P1_goal_curved;
+
+MODULE Signals(T1_occupied, T2_occupied, T3_occupied)
+  VAR
+    S1_red : boolean;
+    S2_red : boolean;
+    S3_red : boolean;
+  ASSIGN
+    init(S1_red) := TRUE;
+    init(S2_red) := TRUE;
+    init(S3_red) := TRUE;
+
+    next(S1_red) := case
+      T2_occupied : TRUE;
+      TRUE : FALSE;
+    esac;
+
+    next(S2_red) := FALSE;
+    next(S3_red) := case
+        T1_occupied : TRUE;
+        T2_occupied : TRUE;
+        TRUE : FALSE;
+    esac;
+
+MODULE SwitchGoal(T1_occupied, T2_occupied, T3_occupied, From_T3)
+  VAR
+    P1_goal_straight : boolean;
+    P2_goal_straight : boolean;
+    P1_goal_curved : boolean;
+    P2_goal_curved : boolean;
+  DEFINE
+    P2_goal_straight := P1_goal_straight;
+    P2_goal_curved := P1_goal_curved;
+    P1_goal_curved := !P2_goal_straight;
+  ASSIGN
+    init(P1_goal_straight) := TRUE;
+
+    next(P1_goal_straight) := case
+      T2_occupied : TRUE;
+      T1_occupied & !From_T3 : TRUE;
+      TRUE : FALSE;
+    esac;
+
