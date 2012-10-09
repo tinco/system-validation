@@ -1,6 +1,16 @@
   VAR
-    check_S1A : CheckSignal(S1A_red, S1A_green, T1A_occupied|T2A_occupied);
-    check_S1B : CheckSignal(S1B_red, S1B_green, T1B_occupied|T2B_occupied);
+    check_S1A : CheckSignal(S1A_red, S1A_green, FALSE);
+    check_S1B : CheckSignal(S1B_red, S1B_green, FALSE);
+    check_S2A : CheckSignal(S2A_red, S2A_green, T3B_occupied|T2A_occupied);
+    check_S2B : CheckSignal(S2B_red, S2B_green, T3A_occupied|T2B_occupied);
+    check_S3A : CheckSignal(S3A_red, S3A_green, T2A_occupied);
+    check_S3B : CheckSignal(S3B_red, S3B_green, T2B_occupied);
+    check_S4A : CheckSignal(S4A_red, S4A_green, T4A_occupied|T1B_occupied);
+    check_S4B : CheckSignal(S4B_red, S4B_green, T4B_occupied|T1A_occupied);
+    check_SwitchLiveliness1A : CheckSwitchLiveliness(P1A_goal_straight, P1A_goal_curved, P1A_locked_straight, P1A_locked_curved);
+    check_SwitchLiveliness1B : CheckSwitchLiveliness(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved);
+    check_SwitchLiveliness2A : CheckSwitchLiveliness(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved);
+    check_SwitchLiveliness2B : CheckSwitchLiveliness(P2B_goal_straight, P2B_goal_curved, P2B_locked_straight, P2B_locked_curved);
     check_Switch1A : CheckSwitch(P1A_goal_straight, P1A_goal_curved, P1A_locked_straight, P1A_locked_curved, S1A_red);
     check_Switch1B : CheckSwitch(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved, S1B_red);
     check_Switch2A : CheckSwitch(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved, S2A_red);
@@ -12,6 +22,10 @@ MODULE CheckSignal(red, green, unsafe)
 
   LTLSPEC -- Light should be red in unsafe situation
     G (unsafe -> red)
+
+MODULE CheckSwitchLiveliness(goal_straight, goal_curved, locked_straight, locked_curved)
+  LTLSPEC -- Switches should eventually move into position
+    G ((goal_straight -> F locked_straight) & (goal_curved -> F locked_curved))
 
 MODULE CheckSwitch(goal_straight, goal_curved, locked_straight, locked_curved, red)
   LTLSPEC -- A switch can have only one goal
@@ -26,4 +40,4 @@ MODULE CheckSwitch(goal_straight, goal_curved, locked_straight, locked_curved, r
         & goal_curved & X locked_curved -> X !goal_curved)
 
   LTLSPEC -- Lights will remain red until the associated switches are locked
-    G (goal_straight | goal_curved -> red U locked_straight | locked_curved)
+    G (goal_straight | goal_curved -> red U (locked_straight | locked_curved))
