@@ -1,12 +1,12 @@
   VAR
     check_S1A : CheckSignal(S1A_red, S1A_green, FALSE);
     check_S1B : CheckSignal(S1B_red, S1B_green, FALSE);
-    check_S2A : CheckSignal(S2A_red, S2A_green, T3B_occupied|T2A_occupied);
-    check_S2B : CheckSignal(S2B_red, S2B_green, T3A_occupied|T2B_occupied);
+    check_S2A : CheckSignal(S2A_red, S2A_green, T2A_occupied);
+    check_S2B : CheckSignal(S2B_red, S2B_green, T2B_occupied);
     check_S3A : CheckSignal(S3A_red, S3A_green, T2A_occupied);
     check_S3B : CheckSignal(S3B_red, S3B_green, T2B_occupied);
-    check_S4A : CheckSignal(S4A_red, S4A_green, T4A_occupied|T1B_occupied);
-    check_S4B : CheckSignal(S4B_red, S4B_green, T4B_occupied|T1A_occupied);
+    check_S4A : CheckSignal(S4A_red, S4A_green, T4A_occupied);
+    check_S4B : CheckSignal(S4B_red, S4B_green, T4B_occupied);
     check_SwitchLiveliness1A : CheckSwitchLiveliness(P1A_goal_straight, P1A_goal_curved, P1A_locked_straight, P1A_locked_curved);
     check_SwitchLiveliness1B : CheckSwitchLiveliness(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved);
     check_SwitchLiveliness2A : CheckSwitchLiveliness(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved);
