@@ -9,10 +9,22 @@ MODULE Environment(
         P2B_goal_straight,P2B_goal_curved
     )
   VAR
-    train : Train(crossing1, crossing2);
     switch1 : Switch(goal1);
     switch2 : Switch(goal2);
+    train : Train(switch1, switch2, S1A_red, S1B_red, signals1, signals2);
+    signals1 : Signals(train.T1A, train.T2A, train.T3A);
+    signals2 : Signals(train.T1B, train.T2B, train.T3B);
   DEFINE
+    goal1 := case
+      P1A_goal_straight : straight;
+      TRUE : curved;
+    esac;
+
+    goal2 := case
+      P2A_goal_straight : straight;
+      TRUE : curved;
+    esac;
+
     T1A_occupied := train.T1A;
     T2A_occupied := train.T2A;
     T3A_occupied := train.T3A;
@@ -26,14 +38,14 @@ MODULE Environment(
     S1A_green := FALSE;
     S1B_green := FALSE;
 
-    P1A_locked_straight := switch1 = straight;
-    P2B_locked_straight := switch1 = straight;
-    P1A_locked_curved := switch1 = curved;
-    P2B_locked_curved := switch1 = curved;
-    P2A_locked_straight := switch2 = straight;
-    P1B_locked_straight := switch2 = straight;
-    P2A_locked_curved := switch2 = curved;
-    P1B_locked_curved := switch2 = curved;
+    P1A_locked_straight := switch1.state = straight;
+    P2B_locked_straight := switch1.state = straight;
+    P1A_locked_curved := switch1.state = curved;
+    P2B_locked_curved := switch1.state = curved;
+    P2A_locked_straight := switch2.state = straight;
+    P1B_locked_straight := switch2.state = straight;
+    P2A_locked_curved := switch2.state = curved;
+    P1B_locked_curved := switch2.state = curved;
 
 MODULE Switch(goal)
   VAR
@@ -55,7 +67,7 @@ MODULE Train(Switch1, Switch2, S1A, S1B, Signals1, Signals2)
     T3B : boolean;
     T4B : boolean;
     train : {no, left, right};
-    newTrain : {no, left, right}
+    newTrain : {no, left, right};
   ASSIGN
     init(T1A) := FALSE;
     init(T2A) := FALSE;

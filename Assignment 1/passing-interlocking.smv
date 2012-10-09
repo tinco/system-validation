@@ -10,7 +10,7 @@ MODULE Interlocking(
   VAR
     switch1 : SwitchGoal(T1A_occupied, T2A_occupied, T3B_occupied, S4B_red);
     switch2 : SwitchGoal(T1B_occupied, T2B_occupied, T3A_occupied, S4A_red);
-    signals1 : Signals(T1A_occupied, T2A_occupied, T3B_occupied);
+    signals1 : Signals(T1A_occupied, T2A_occupied, T3A_occupied);
     signals2 : Signals(T1B_occupied, T2B_occupied, T3A_occupied);
   DEFINE
     S2A_red   := signals1.S1_red;
@@ -38,6 +38,10 @@ MODULE Interlocking(
     P2A_goal_curved := switch2.P2_goal_curved;
     P1B_goal_curved := switch2.P1_goal_curved;
 
+--   ---------S3---
+--   ------/--TB---
+--   --T1-/-T2-T3--
+--   --S1---S2-----
 MODULE Signals(T1_occupied, T2_occupied, T3_occupied)
   VAR
     S1_red : boolean;
@@ -63,9 +67,6 @@ MODULE Signals(T1_occupied, T2_occupied, T3_occupied)
 MODULE SwitchGoal(T1_occupied, T2_occupied, T3_occupied, From_T3)
   VAR
     P1_goal_straight : boolean;
-    P2_goal_straight : boolean;
-    P1_goal_curved : boolean;
-    P2_goal_curved : boolean;
   DEFINE
     P2_goal_straight := P1_goal_straight;
     P2_goal_curved := P1_goal_curved;
