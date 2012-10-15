@@ -1,3 +1,5 @@
+-- Tinco Andringa (s0159786) & Daniel Moscoviter (s0140155)
+
 MODULE Interlocking(
                      T1_occupied,T2_occupied,T3_occupied,
                      S1_red,S1_green,

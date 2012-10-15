@@ -1,3 +1,5 @@
+-- Tinco Andringa (s0159786) & Daniel Moscoviter (s0140155)
+
   VAR
     checkSignalSanity1 : CheckSignalSanity(S1_red, S1_green);
     checkSignalSanity2 : CheckSignalSanity(S2_red, S2_green);

@@ -1,3 +1,5 @@
+-- Tinco Andringa (s0159786) & Daniel Moscoviter (s0140155)
+
 MODULE Environment(
         S2A_red,S3A_red,S4A_red,
         S2B_red,S3B_red,S4B_red,

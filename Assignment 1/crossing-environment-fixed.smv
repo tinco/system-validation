@@ -1,3 +1,5 @@
+-- Tinco Andringa (s0159786) & Daniel Moscoviter (s0140155)
+
 MODULE Track(S2_green)
   VAR
     T0_occupied : boolean;

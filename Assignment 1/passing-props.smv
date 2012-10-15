@@ -1,3 +1,5 @@
+-- Tinco Andringa (s0159786) & Daniel Moscoviter (s0140155)
+
   VAR
     check_S1A : CheckSignal(S1A_red, S1A_green, FALSE);
     check_S1B : CheckSignal(S1B_red, S1B_green, FALSE);
