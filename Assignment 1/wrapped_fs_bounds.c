@@ -28,7 +28,7 @@ void init_fs(){
 
 int open_dir(int parent,char*name){
     int i;
-    if (parent < 0 || parent > MAX_DIRS){
+    if (parent < 0 || parent >= MAX_DIRS){
         return ERR_INVALID_ARG;
     }
     if (dir_status[parent]&ENTRY_USED==0){
@@ -48,7 +48,7 @@ int open_dir(int parent,char*name){
 
 int create_dir(int parent,char*name){
     int i;
-    if (parent < 0 || parent > MAX_DIRS){
+    if (parent < 0 || parent >= MAX_DIRS){
         return ERR_INVALID_ARG;
     }
     if (dir_status[parent]&ENTRY_USED==0){
@@ -68,7 +68,7 @@ int create_dir(int parent,char*name){
 
 int close_dir(int id){
     int i;
-    if (id < 0 || id > MAX_DIRS){
+    if (id < 0 || id >= MAX_DIRS){
         return ERR_INVALID_ARG;
     }
     if (dir_status[id]&ENTRY_USED==0){
@@ -84,7 +84,7 @@ int close_dir(int id){
 
 int open_file(int dir,char*name){
     int i;
-    if (dir < 0 || dir > MAX_DIRS){
+    if (dir < 0 || dir >= MAX_DIRS){
         return ERR_INVALID_ARG;
     }
     if (dir_status[dir]&ENTRY_USED==0){
@@ -105,7 +105,7 @@ int open_file(int dir,char*name){
 
 int create_file(int dir,char*name){
     int i;
-    if (dir < 0 || dir > MAX_DIRS){
+    if (dir < 0 || dir >= MAX_DIRS){
         return ERR_INVALID_ARG;
     }
     if (dir_status[dir]&ENTRY_USED==0){
@@ -125,7 +125,7 @@ int create_file(int dir,char*name){
 }
 
 int read_file(int fd,long offset,int len,void*buf){
-    if (fd < 0 || fd > MAX_FILES){
+    if (fd < 0 || fd >= MAX_FILES){
         return ERR_INVALID_ARG;
     }
     if (file_status[fd]&ENTRY_USED==0){
@@ -136,7 +136,7 @@ int read_file(int fd,long offset,int len,void*buf){
 }
 
 int write_file(int fd,long offset,int len,void*buf){
-    if (fd < 0 || fd > MAX_FILES){
+    if (fd < 0 || fd >= MAX_FILES){
         return ERR_INVALID_ARG;
     }
     if (file_status[fd]&ENTRY_USED==0){
@@ -147,13 +147,13 @@ int write_file(int fd,long offset,int len,void*buf){
 }
 
 int close_file(int fd){
-    if (fd < 0 || fd > MAX_FILES){
+    if (fd < 0 || fd >= MAX_FILES){
         return ERR_INVALID_ARG;
     }
     if (file_status[fd]&ENTRY_USED==0){
         return ERR_NOT_OPEN;
     }
-    fs_file_close(&files[fd]);
+    fs_close_file(&files[fd]);
     file_status[fd]&=~ENTRY_USED;
     file_parent[fd]=-1;
     return SUCCESS;
