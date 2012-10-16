@@ -83,7 +83,13 @@ MODULE Environment(
     init(newTrain) := no;
 
     next(newTrain) := case
-      newTrain = no & (train1.train = no | train2.train = no | train3.train = no) : {no, t1Left, t1Left, t2Left, t2Right, t3Left, t3Right};
+      newTrain = no & (train1.train = no & train2.train = no & train3.train = no) : {no, t1Left, t1Right, t2Left, t2Right, t3Left, t3Right};
+      newTrain = no & (train1.train = no & train2.train = no) : {no, t1Left, t1Right, t2Left, t2Right};
+      newTrain = no & (train1.train = no & train3.train = no) : {no, t1Left, t1Right, t3Left, t3Right};
+      newTrain = no & (train2.train = no & train3.train = no) : {no, t2Left, t2Right, t3Left, t3Right};
+      newTrain = no & (train1.train = no) : {no, t1Left, t1Right};
+      newTrain = no & (train2.train = no) : {no, t2Left, t2Right};
+      newTrain = no & (train3.train = no) : {no, t3Left, t3Right};
       TRUE : no;
     esac;
 
