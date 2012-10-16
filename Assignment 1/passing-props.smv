@@ -1,24 +1,24 @@
 -- Tinco Andringa (s0159786) & Daniel Moscoviter (s0140155)
 
   VAR
-    check_S1A : CheckSignal(S1A_red, S1A_green, FALSE);
-    check_S1B : CheckSignal(S1B_red, S1B_green, FALSE);
-    check_S2A : CheckSignal(S2A_red, S2A_green, T2A_occupied);
-    check_S2B : CheckSignal(S2B_red, S2B_green, T2B_occupied);
-    -- check_S3A : CheckSignal(S3A_red, S3A_green, T2A_occupied);
-    -- check_S3B : CheckSignal(S3B_red, S3B_green, T2B_occupied);
-    check_S4A : CheckSignal(S4A_red, S4A_green, T4A_occupied);
-    check_S4B : CheckSignal(S4B_red, S4B_green, T4B_occupied);
-    check_SwitchLiveliness1A : CheckSwitchLiveliness(P1A_goal_straight, P1A_goal_curved, P1A_locked_straight, P1A_locked_curved);
-    check_SwitchLiveliness1B : CheckSwitchLiveliness(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved);
-    check_SwitchLiveliness2A : CheckSwitchLiveliness(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved);
-    check_SwitchLiveliness2B : CheckSwitchLiveliness(P2B_goal_straight, P2B_goal_curved, P2B_locked_straight, P2B_locked_curved);
-    check_Switch1A : CheckSwitch(P1A_goal_straight, P1A_goal_curved, P1A_locked_straight, P1A_locked_curved, S1A_red);
-    check_Switch1B : CheckSwitch(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved, S1B_red);
-    check_Switch2A : CheckSwitch(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved, S2A_red);
-    check_Switch2B : CheckSwitch(P2B_goal_straight, P2B_goal_curved, P2B_locked_straight, P2B_locked_curved, S1B_red);
-    check_TrainProgressionA : CheckTrainProgression(T1A_occupied, T2A_occupied, T3A_occupied, T1B_occupied);
-    check_TrainProgressionB : CheckTrainProgression(T1B_occupied, T2B_occupied, T3B_occupied, T1A_occupied);
+--  check_S1A : CheckSignal(S1A_red, S1A_green, FALSE);
+--  check_S1B : CheckSignal(S1B_red, S1B_green, FALSE);
+--  check_S2A : CheckSignal(S2A_red, S2A_green, T2A_occupied);
+--  check_S2B : CheckSignal(S2B_red, S2B_green, T2B_occupied);
+--  -- check_S3A : CheckSignal(S3A_red, S3A_green, T2A_occupied);
+--  -- check_S3B : CheckSignal(S3B_red, S3B_green, T2B_occupied);
+--  check_S4A : CheckSignal(S4A_red, S4A_green, T4A_occupied);
+--  check_S4B : CheckSignal(S4B_red, S4B_green, T4B_occupied);
+--  check_SwitchLiveliness1A : CheckSwitchLiveliness(P1A_goal_straight, P1A_goal_curved, P1A_locked_straight, P1A_locked_curved);
+--  check_SwitchLiveliness1B : CheckSwitchLiveliness(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved);
+--  check_SwitchLiveliness2A : CheckSwitchLiveliness(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved);
+--  check_SwitchLiveliness2B : CheckSwitchLiveliness(P2B_goal_straight, P2B_goal_curved, P2B_locked_straight, P2B_locked_curved);
+--  check_Switch1A : CheckSwitch(P1A_goal_straight, P1A_goal_curved, P1A_locked_straight, P1A_locked_curved, S1A_red);
+--  check_Switch1B : CheckSwitch(P1B_goal_straight, P1B_goal_curved, P1B_locked_straight, P1B_locked_curved, S1B_red);
+--  check_Switch2A : CheckSwitch(P2A_goal_straight, P2A_goal_curved, P2A_locked_straight, P2A_locked_curved, S2A_red);
+--  check_Switch2B : CheckSwitch(P2B_goal_straight, P2B_goal_curved, P2B_locked_straight, P2B_locked_curved, S1B_red);
+
+    check_TrainProgression : CheckTrainProgression(environment.train1);
 
     check_SafeProgressionA : CheckSafeProgression(T1A_occupied, T2A_occupied, T3A_occupied, T1B_occupied,
                                                   S4A, S1B);
@@ -61,23 +61,11 @@ MODULE CheckAllTracks(T1A,T2A,T3A,T1B,T2B,T3B, train)
 LTLSPEC
   G (T1A xor T2A xor T3A xor T1B xor T2B xor T3B xor train)
 
-MODULE CheckTrainProgression(T1,T2,T3,T4)
+MODULE CheckTrainProgression(train)
 LTLSPEC
-  -- If on Track 1, and the next state is either T1 or T2 (which means it goes from
-  -- left to right), then eventually the track T4 should be true.
-  G (T1 & (X T1 | X T2) -> F T4)
+ G (train.train = left & train.T1A -> F train.T1B )
 
 LTLSPEC
-  -- A train never goes backwards, so T1 does not necessarily follow after T2
-  G (T2 & (X T2 | X T3) -> !F T1)
-
-LTLSPEC
-  -- That a train is in T2 means it is going to T3
-  -- Coverage property
-  G (T2 -> X T3)
-
-LTLSPEC
-  -- That a train is in T2 means it does not go to T1
-  G (T2 -> ! X T1)
+ G (train.train = right & train.T1B -> F train.T1A )
 
 MODULE CheckSafeProgression(T1,T2,T3,T4,S1,S2)
