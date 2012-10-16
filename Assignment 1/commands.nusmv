@@ -1,0 +1,3 @@
+go_bmc
+check_ltlspec_bmc_onepb -k 15 -l 10
+quit

@@ -71,6 +71,3 @@ LTLSPEC
 LTLSPEC
   -- That a train is in T2 means it does not go to T1
   G (T2 -> X T1)
-
-LTLSPEC
-  G (T2 & ! T2)
