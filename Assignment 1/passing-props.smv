@@ -25,11 +25,11 @@
     check_SafeProgressionB : CheckSafeProgression(T1B_occupied, T2B_occupied, T3B_occupied, T1A_occupied,
                                                   S4B, S1A);
 
-    check_AllTracks : CheckAllTracks(T1A_occupied, T2A_occupied, T3A_occupied,
-                                    T1B_occupied,T2B_occupied,T3B_occupied,
-                                    !(T1A_occupied | T2A_occupied | T3A_occupied |
-                                    T1B_occupied | T2B_occupied | T3B_occupied)
-                                    );
+--    check_AllTracks : CheckAllTracks(T1A_occupied, T2A_occupied, T3A_occupied,
+--                                  T1B_occupied,T2B_occupied,T3B_occupied,
+--                                  !(T1A_occupied | T2A_occupied | T3A_occupied |
+--                                  T1B_occupied | T2B_occupied | T3B_occupied)
+--                                  );
 
 MODULE CheckSignal(red, green, unsafe)
   LTLSPEC -- Both lights should not be on at the same time
