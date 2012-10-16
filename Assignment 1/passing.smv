@@ -1,4 +1,4 @@
-#include "passing-environment-1.smv"
+#include "passing-environment-2.smv"
 #include "passing-interlocking.smv"
 #include "passing-main.smv"
 #include "passing-props.smv"

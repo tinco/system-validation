@@ -20,6 +20,11 @@
     check_TrainProgressionA : CheckTrainProgression(T1A_occupied, T2A_occupied, T3A_occupied, T1B_occupied);
     check_TrainProgressionB : CheckTrainProgression(T1B_occupied, T2B_occupied, T3B_occupied, T1A_occupied);
 
+    check_SafeProgressionA : CheckSafeProgression(T1A_occupied, T2A_occupied, T3A_occupied, T1B_occupied,
+                                                  S4A, S1B);
+    check_SafeProgressionB : CheckSafeProgression(T1B_occupied, T2B_occupied, T3B_occupied, T1A_occupied,
+                                                  S4B, S1A);
+
     check_AllTracks : CheckAllTracks(T1A_occupied, T2A_occupied, T3A_occupied,
                                     T1B_occupied,T2B_occupied,T3B_occupied,
                                     !(T1A_occupied | T2A_occupied | T3A_occupied |
@@ -74,3 +79,5 @@ LTLSPEC
 LTLSPEC
   -- That a train is in T2 means it does not go to T1
   G (T2 -> ! X T1)
+
+MODULE CheckSafeProgression(T1,T2,T3,T4,S1,S2)
