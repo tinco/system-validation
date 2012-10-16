@@ -1,0 +1,169 @@
+-- Tinco Andringa (s0159786) & Daniel Moscoviter (s0140155)
+
+MODULE Environment(
+        S2A_red,S3A_red,S4A_red,
+        S2B_red,S3B_red,S4B_red,
+        S2A_green,S3A_green,S4A_green,
+        S2B_green,S3B_green,S4B_green,
+        P1A_goal_straight,P1A_goal_curved,
+        P1B_goal_straight,P1B_goal_curved,
+        P2A_goal_straight,P2A_goal_curved,
+        P2B_goal_straight,P2B_goal_curved
+    )
+  VAR
+    interlocking : Interlocking(
+        T1A_occupied,T2A_occupied,T3A_occupied,T4A_occupied,
+        T1B_occupied,T2B_occupied,T3B_occupied,T4B_occupied,
+        S1A_red,S1A_green,S1B_red,S1B_green,
+        P1A_locked_straight,P1A_locked_curved,
+        P1B_locked_straight,P1B_locked_curved,
+        P2A_locked_straight,P2A_locked_curved,
+        P2B_locked_straight,P2B_locked_curved
+    );
+    switch1 : Switch(goal1);
+    switch2 : Switch(goal2);
+    train1 : Train(switch1, switch2, S1A_red, S1B_red, interlocking.signals1, interlocking.signals2, newTrain1);
+    train2 : Train(switch1, switch2, S1A_red, S1B_red, interlocking.signals1, interlocking.signals2, newTrain2);
+    train3 : Train(switch1, switch2, S1A_red, S1B_red, interlocking.signals1, interlocking.signals2, newTrain3);
+    S1A_red   : boolean;
+    S1B_red   : boolean;
+    newTrain : {no, t1Left, t1Right, t2Left, t2Right, t3Left, t3Right};
+  DEFINE
+    newTrain1 := case
+       newTrain = t1Left : left;
+       newTrain = t1Right : right;
+       TRUE : no;
+    esac;
+
+    newTrain2 := case
+       newTrain = t2Left : left;
+       newTrain = t2Right : right;
+       TRUE : no;
+    esac;
+
+    newTrain3 := case
+       newTrain = t3Left : left;
+       newTrain = t3Right : right;
+       TRUE : no;
+    esac;
+
+    goal1 := case
+      P1A_goal_straight : straight;
+      TRUE : curved;
+    esac;
+
+    goal2 := case
+      P2A_goal_straight : straight;
+      TRUE : curved;
+    esac;
+
+    T1A_occupied := train1.T1A | train2.T1A | train3.T1A;
+    T2A_occupied := train1.T2A | train2.T2A | train3.T2A;
+    T3A_occupied := train1.T3A | train2.T3A | train3.T3A;
+    T4A_occupied := train1.T4A | train2.T4A | train3.T4A;
+    T1B_occupied := train1.T1B | train2.T1B | train3.T1B;
+    T2B_occupied := train1.T2B | train2.T2B | train3.T2B;
+    T3B_occupied := train1.T3B | train2.T3B | train3.T3B;
+    T4B_occupied := train1.T4B | train2.T4B | train3.T4B;
+    S1A_green := !S1A_red;
+    S1B_green := !S1B_red;
+
+    P1A_locked_straight := switch1.state = straight;
+    P2B_locked_straight := switch1.state = straight;
+    P1A_locked_curved := switch1.state = curved;
+    P2B_locked_curved := switch1.state = curved;
+    P2A_locked_straight := switch2.state = straight;
+    P1B_locked_straight := switch2.state = straight;
+    P2A_locked_curved := switch2.state = curved;
+    P1B_locked_curved := switch2.state = curved;
+
+    S1A := newTrain = t1Left | newTrain = t2Left | newTrain = t3Left;
+    S1B := newTrain = t1Right | newTrain = t2Right | newTrain = t3Right;
+  ASSIGN
+    init(newTrain) := no;
+
+    next(newTrain) := case
+      newTrain = no & (train1.train = no | train2.train = no | train3.train = no) : {no, t1Left, t1Left, t2Left, t2Right, t3Left, t3Right};
+      TRUE : no;
+    esac;
+
+MODULE Switch(goal)
+  VAR
+    state : {straight, curved, transitioning};
+  ASSIGN
+    init(state) := straight;
+    next(state) := case
+      TRUE: goal;
+    esac;
+
+MODULE Train(Switch1, Switch2, S1A, S1B, Signals1, Signals2, newTrain)
+  VAR
+    T1A : boolean;
+    T2A : boolean;
+    T3A : boolean;
+    T4A : boolean;
+    T1B : boolean;
+    T2B : boolean;
+    T3B : boolean;
+    T4B : boolean;
+    train : {no, left, right};
+
+  ASSIGN
+    init(T1A) := FALSE;
+    init(T2A) := FALSE;
+    init(T3A) := FALSE;
+    init(T4A) := FALSE;
+    init(T1B) := FALSE;
+    init(T2B) := FALSE;
+    init(T3B) := FALSE;
+    init(T4B) := FALSE;
+
+    init(train) := no;
+
+    next(T1A) := case
+      newTrain = left : TRUE;
+      train = left & T1A & Signals1.S1_red : TRUE;
+      train = right & T3B & !Signals1.S3_red : TRUE;
+      TRUE : FALSE;
+    esac;
+
+    next(T2A) := case
+      train = left & T1A & !Signals1.S1_red : TRUE;
+      train = left & T2A : FALSE;
+      TRUE : T2A;
+    esac;
+
+    next(T3A) := case
+      T2A : TRUE;
+      TRUE : FALSE;
+    esac;
+
+    next(T4A) := FALSE;
+
+    next(T1B) := case
+      newTrain = right : TRUE;
+      train = right & T1B & Signals2.S1_red : TRUE;
+      train = left & T3A & !Signals2.S3_red : TRUE;
+      TRUE : FALSE;
+    esac;
+
+    next(T2B) := case
+      train = right & T1B & !Signals2.S1_red : TRUE;
+      train = right & T2B : FALSE;
+      TRUE : T2B;
+    esac;
+
+    next(T3B) := case
+      T2B : TRUE;
+      TRUE : FALSE;
+    esac;
+
+    next(T4B) := FALSE;
+
+    next(train) := case
+      newTrain = right : right;
+      newTrain = left : left;
+      train = left & T1B : no;
+      train = right & T1A : no;
+      TRUE : train;
+    esac;
