@@ -5,14 +5,16 @@
 final class Player
 {
 
-  Position position;
+  /*@ spec_public */ Position position;
 
   /** @informal: the constructed object has the given position. */
+  //@ ensures position == p;
   Player (Position p) {
     position = p;
   }
 
   /** @informal: we return our position */
+  //@ ensures \result == position
   public /*@ pure */ Position position () {
     return position;
   }
@@ -22,6 +24,8 @@ final class Player
          The player requires a valid next position, 
          that is, next to the current position of the player.
          Then it gets the new position. */
+  
+  //@ requires position().isValidNextPosition(newPosition);
   public void setPosition (Position newPosition) {
     position = newPosition;
   }
