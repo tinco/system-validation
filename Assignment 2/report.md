@@ -313,3 +313,17 @@ We added a model field called gameWon with a rewritten gameWon representation.
 And then rewrote the ensures for the wonGame method to read:
 
     //@ ensures \result == gameWon;
+
+For the gameStuck field we defined a representation that checks for each crate if there's a free
+space next to it, and if the opposite space is also free then it is not stuck otherwise it is.
+
+
+    /*@ public model boolean gameStuck;
+      @ private represents gameStuck <-
+      @   !gameWon && (\forall int x; 0 <= x && x < board.xSize;
+      @         (\forall int y; 0 <= y && y < board.ySize;
+      @           (board.items[x][y] instanceof Crate && !(
+                   (board.items[x-1][y] instanceof Ground && board.items[x+1][y] instanceof Ground) || 
+                   (board.items[x][y-1] instanceof Ground && board.items[x][y+1] instanceof Ground)
+                  )) || !(board.items[x][y] instanceof Crate) ));
+    */
