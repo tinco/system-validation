@@ -4,24 +4,28 @@
 final class Wall implements BoardItem
 {
 
-  final Position position;
+  final /*@ spec_public */ Position position;
 
   /** @informal: the constructed object has the given position. */
+  //@ ensures position == p;
   Wall (Position p) {
     position = p;
   }
 
   /** @informal: we cannot stand on the wall */
+  //@ also ensures \result == false;
   public boolean isCanStepOn () {
     return false;
   }
 
   /** @informal: the wall cannot be moved */
+  //@ also ensures \result == false; 
   public boolean isMovable () {
     return false;
   }
 
   /** @informal: we return our position */
+  //@ also ensures \result == position;
   public Position position () {
     return position;
   }
@@ -33,6 +37,7 @@ final class Wall implements BoardItem
 
 
   /** @informal: walls are not marked */
+  //@ also ensures \result == false; 
   public boolean isMarked () {
     return false;
   }

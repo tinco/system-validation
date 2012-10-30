@@ -258,12 +258,43 @@ We added an invariant that says that the position is never negative.
 
 Then added specs for the constructor, making sure it gets constructed properly.
 
-    //@ requires x > -1 && y > -1
-    //@ ensures this.x == x && this.y == y
+    //@ requires x > -1 && y > -1;
+    //@ ensures this.x == x && this.y == y;
 
 And specs to validate the correct function of the equals method.
 
-    //@ requires o instanceof Position
-    //@ ensures \result == ((Position)o).x == x && ((Position)o).y) == y
+    //@ requires o instanceof Position;
+    //@ ensures \result == ((Position)o).x == x && ((Position)o).y) == y;
 
+Then we added a spec to see if the important isValidNextPosition method works correctly.
 
+    //@ ensures \result ==> (newPosition.x == x && (newPosition.y == y + 1 || newPosition.y == y-1)) ||
+    //@                     (newPosition.y == y && (newPosition.x == x + 1 || newPosition.x == x-1));
+
+### Wall.java
+
+We added the standard boardItem property specifications. For the constructor.
+
+    //@ ensures position == p;
+
+For isCanStepOn()
+
+     //@ also ensures \result == false; 
+
+For isMovable()
+
+     //@ also ensures \result == false; 
+
+For isMarked()
+
+  //@ also ensures getClass().getName() == "Crate" ==> \result == false;
+
+And the position()
+
+    //@ also ensures \result == position;
+
+3. Static Checking
+-----------------
+
+4. Abstract Specifications
+------------------------

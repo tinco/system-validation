@@ -35,6 +35,8 @@ final class Position
 
   /** @informal: check if the new position is a valid one step horizontal or
          vertical move from the current one. */
+  //@ ensures \result ==> (newPosition.x == x && (newPosition.y == y + 1 || newPosition.y == y-1)) ||
+  //@                     (newPosition.y == y && (newPosition.x == x + 1 || newPosition.x == x-1));
   /*@ pure */ /*@ spec_public @*/ boolean isValidNextPosition (Position newPosition) {
     if (newPosition.x == x) {
       return newPosition.y == y + 1 || newPosition.y == y - 1;
