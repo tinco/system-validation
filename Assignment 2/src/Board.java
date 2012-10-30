@@ -26,8 +26,8 @@ final class Board {
     this.xSize = xSize;
     this.ySize = ySize;
     items = new BoardItem[xSize][ySize];
-    for (int x = 1; x < xSize; x++) {
-      for (int y = 1; y < ySize; y++) {
+    for (int x = 0; x < xSize; x++) {
+      for (int y = 0; y < ySize; y++) {
         items[x][y] = new Ground (new Position (x, y));
       }
     }
@@ -36,8 +36,8 @@ final class Board {
   /** Used to build some meaningful game board. */
   /** @informal: only items with predeclared correct position
         information are allowed to be put on the board. */
-  //@ requires item.position().x > 0 && item.position().x < xSize;
-  //@ requires item.position().y > 0 && item.position().y < ySize;
+  //@ requires item.position().x >= 0 && item.position().x < xSize;
+  //@ requires item.position().y >= 0 && item.position().y < ySize;
   void putItemOnBoard (BoardItem item) {
     items[item.position().x][item.position().y] = item;
   }
