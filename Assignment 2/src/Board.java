@@ -16,7 +16,7 @@ final class Board {
          information -- their stored position is the one they occupy 
          on the board. */
   //@ public invariant items.length == xSize;
-  //@ public invariant (\forall int i; 0 <= i && i < xSize; items[i].length == ySize);  
+  //@ public invariant (\forall int i; 0 <= i && i < xSize; items[i] != null && items[i].length == ySize);  
 
   /** @informal: Based on the valid size input creates an empty board of
          that size. */

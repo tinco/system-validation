@@ -36,6 +36,7 @@ final class Game {
 
   /** @informal: Based on a board and a validly referenced player with respect to this
          board (see above) create new game with this board and player. */
+  //@ requires board != null && player != null;
   //@ ensures this.board == board && this.player == player;
   Game (Board board, Player player) {
     this.board = board;
@@ -49,6 +50,7 @@ final class Game {
     boolean result = true;
 
     //@ loop_invariant x >= 0;
+    //@ loop_invariant board.items[x] != null
     for (int x = 0; x < board.xSize; x++) {
       if (!checkWonRow (board.items[x])) {
         result = false;
@@ -61,6 +63,7 @@ final class Game {
   /** Helper method for the above, ESC/Java2 does not deal well (this is 
     * an understatement) with nested loops.
     */
+  //@ requires row != null;
   //@ requires row.length == board.ySize;
   //@ requires (\forall int y; 0 <= y && y < board.ySize; row[y] != null);
   private boolean checkWonRow (BoardItem[] row) {
