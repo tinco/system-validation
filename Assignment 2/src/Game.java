@@ -62,7 +62,7 @@ final class Game {
     boolean result = true;
 
     //@ loop_invariant x >= 0;
-    //@ loop_invariant board.items[x] != null
+    //@ loop_invariant board.items[x] != null;
     //@ loop_invariant board.items[x].length == board.ySize;
     for (int x = 0; x < board.xSize; x++) {
       if (!checkWonRow (board.items[x])) {
