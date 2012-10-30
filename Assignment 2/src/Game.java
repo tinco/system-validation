@@ -55,10 +55,12 @@ final class Game {
   /** Helper method for the above, ESC/Java2 does not deal well (this is 
     * an understatement) with nested loops.
     */
+  //@ requires row.length == board.ySize;
+  //@ requires (\forall int y; 0 <= y && y < board.ySize; row[y] != null);
   private boolean checkWonRow (BoardItem[] row) {
     boolean result = true;
 
-    //@ loop_invariant (y > -1);
+    //@ loop_invariant y >= 0;
     for (int y = 0; y < board.ySize; y++) {
       if (row[y].isMarked () && !(row[y] instanceof Crate)) {
         result = false;
