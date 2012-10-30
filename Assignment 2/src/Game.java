@@ -33,6 +33,7 @@ final class Game {
                 )) || !(board.items[x][y] instanceof Crate) ));
   */
 
+  //@ public invariant !gameWon ==> !gameStuck;
 
   /*@ spec_public */ /*@ non_null */ Board board;
   /*@ spec_public */ Player player;
