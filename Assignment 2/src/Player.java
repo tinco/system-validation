@@ -14,7 +14,7 @@ final class Player
   }
 
   /** @informal: we return our position */
-  //@ ensures \result == position
+  //@ ensures \result == position;
   public /*@ pure */ Position position () {
     return position;
   }
