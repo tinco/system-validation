@@ -96,7 +96,7 @@ final class Game {
     //
     // @informal: make sure with a check that the target
     //   item on the board is indeed movable.
-    //@ assert board.items[newPosition.x][newPosition.y].isMovable()
+    //@ assert board.items[newPosition.x][newPosition.y].isMovable();
 
     int xShift = newPosition.x - player.position ().x;
     int yShift = newPosition.y - player.position ().y;

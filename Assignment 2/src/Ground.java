@@ -4,7 +4,7 @@
 class Ground implements BoardItem
 {
 
-  final Position position;
+  final /*@ spec_public*/ Position position;
 
   /** @informal: the constructed object has the given position. */
   //@ ensures position == p;

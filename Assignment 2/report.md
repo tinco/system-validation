@@ -195,7 +195,7 @@ assertion that the position is on the board.
 
 We then added a check before the moving of an object that the object is movable.
 
-      //@ assert board.items[newPosition.x][newPosition.y].isMovable()
+      //@ assert board.items[newPosition.x][newPosition.y].isMovable();
 
 ### Ground.java
 
