@@ -23,6 +23,17 @@ final class Game {
     @               ));
   */
 
+  /*@ public model boolean gameStuck;
+    @ private represents gameStuck <-
+    @   !gameWon && (\forall int x; 0 <= x && x < board.xSize;
+    @         (\forall int y; 0 <= y && y < board.ySize;
+    @           (board.items[x][y] instanceof Crate && !(
+                 (board.items[x-1][y] instanceof Ground && board.items[x+1][y] instanceof Ground) || 
+                 (board.items[x][y-1] instanceof Ground && board.items[x][y+1] instanceof Ground)
+                )) || !(board.items[x][y] instanceof Crate) ));
+  */
+
+
   /*@ spec_public */ /*@ non_null */ Board board;
   /*@ spec_public */ Player player;
 
@@ -50,7 +61,7 @@ final class Game {
     boolean result = true;
 
     //@ loop_invariant x >= 0;
-    //@ loop_invariant board.items[x] != null
+    //@ loop_invariant board.items[x] != null;
     for (int x = 0; x < board.xSize; x++) {
       if (!checkWonRow (board.items[x])) {
         result = false;

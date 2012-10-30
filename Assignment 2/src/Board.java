@@ -41,5 +41,4 @@ final class Board {
   void putItemOnBoard (BoardItem item) {
     items[item.position().x][item.position().y] = item;
   }
-
 }
