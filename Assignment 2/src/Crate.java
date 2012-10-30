@@ -4,24 +4,28 @@
 public class Crate implements BoardItem
 {
 
-  Position position;
+  /*@ spec_public */ Position position;
 
   /** @informal: the constructed object has the given position. */
+  //@ ensures position == p;
   Crate (Position p) {
     position = p;
   }
 
   /** @informal: we cannot stand on crates */
+  //@ also ensures \result == false;
   public boolean isCanStepOn () {
     return false;
   }
 
   /** @informal: crates can be moved */
+  //@ also ensures \result == true;
   public boolean isMovable () {
     return true;
   }
 
   /** @informal: we return our position */
+  //@ also ensures \result == position;
   public Position position () {
     return position;
   }
@@ -36,6 +40,7 @@ public class Crate implements BoardItem
   }
 
   /** @informal: particular instances of a crate are marked, we are not */
+  //@ also ensures getClass().getName() == "Crate" ==> \result == false;
   public boolean isMarked () {
     return false;
   }

@@ -91,18 +91,78 @@ This assumes that with leaving it is meant that the middle, the lock part, is be
 2. JML Annotations
 ---------------
 
-### i.
-* Board.java
-  - Added an invariant that makes sure xSize and ySize are greater than 0 to give
-    the board meaningful dimensions. Though a 1x1 board still isn't very meaningful.
-  - Added invariants that make sure the board is of the size xSize and ySize say it is.
-  - Added a requires spec that demands the parameters are bigger than 0
-  - Added an ensures spec that says the method populates the items array with Ground
-    objects.
-  - Added requires specs that make sure no items are put on board on invalid positions.
-* BoardItem.java
-  - Added pure attribute to pure functions
-  - Added invariants that make sure the ground is not moveable, that something that
-    is moveable can't be stepped upon and that only ground and crates can be marked.
-  - Added requirements that make sure only a moveable item can be moved to a legal position.
-  - Added requirements that make sure an invalid move results in an error.
+### Board.java
+
+Added an invariant that makes sure xSize and ySize are greater than 0 to give
+the board meaningful dimensions. Though a 1x1 board still isn't very meaningful.
+
+    //@ public invariant xSize > 0 && ySize > 0;
+
+Added invariants that make sure the board is of the size xSize and ySize say it is.
+
+    //@ public invariant items.length == xSize;
+    //@ public invariant (\forall int i; 0 <= i && i < xSize; items[i].length == ySize);  
+
+Added a requires spec that demands the parameters are bigger than 0.
+
+    //@ requires xSize > 0 && ySize > 0;
+ 
+Added an ensures spec that says the method populates the items array with Ground
+objects.
+
+  //@ ensures (\forall int x,y; 0 <= x && 0 <= y && x < xSize && y < ySize; items[x][y] instanceof Ground);
+
+This spec revealed an error in the constructor. The two for loops went from 1 to Size instead of from 0 to Size. We fixed this and the specs all passed again.
+
+Added requires specs that make sure no items are put on board on invalid positions.
+
+    //@ requires item.position().x >= 0 && item.position().x < xSize;
+    //@ requires item.position().y >= 0 && item.position().y < ySize;
+
+### BoardItem.java
+Added pure attribute to pure functions
+
+    //@ public invariant this instanceof Ground ==> !isMovable();
+
+Added invariants that make sure the ground is not moveable, that something that
+is moveable can't be stepped upon and that only ground and crates can be marked.
+
+    //@ public invariant this instanceof Ground ==> !isMovable();
+    //@ public invariant isMovable() ==> !isCanStepOn();
+    //@ public invariant !(this instanceof Ground) && !(this instanceof Crate)  ==> !isMarked();
+
+Added requirements that make sure only a moveable item can be moved to a legal position. And if
+the requirements are not correct an exception is thrown.
+
+    //@ requires isMovable();
+    //@ requires position().isValidNextPosition(newPosition);
+    //@ ensures  position() == newPosition;
+    //@ also
+    //@ requires !isMovable();
+    //@ requires !position().isValidNextPosition(newPosition);
+    //@ signals_only IllegalStateException;
+    //@ ensures position() == \old(position());
+
+### Crate.java
+
+Added an ensures that makes sure the position is set.
+
+    //@ also ensures position == p;
+
+Added also ensures that give information about the properties of this crate.
+
+For the isCanStepOn()
+
+     //@ also ensures \result == false; 
+
+For the isMovable()
+
+     //@ also ensures \result == false; 
+
+For the isMarked()
+
+    //@ also ensures \result == false;
+
+And the position()
+
+    //@ also ensures \result == position;

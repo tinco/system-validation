@@ -13,7 +13,7 @@ final class Player
   }
 
   /** @informal: we return our position */
-  public Position position () {
+  public /*@ pure */ Position position () {
     return position;
   }
 
