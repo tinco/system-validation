@@ -18,9 +18,9 @@ final class Position
   }
 
   /** @informal: we only allow to compare to non null object of
-         our own class. The comparison is successful if and only if both 
+         our own class. The comparison is successful if and only if both
          coordinates match. */
-  public boolean equals (Object o) {
+  public boolean equals (/*@ nullable @*/ Object o) {
     if (o instanceof Position) {
       Position q = (Position) o;
       return x == q.x && y == q.y;
@@ -30,7 +30,7 @@ final class Position
 
   /** @informal: check if the new position is a valid one step horizontal or
          vertical move from the current one. */
-  boolean isValidNextPosition (Position newPosition) {
+  /*@ pure */ /*@ spec_public @*/ boolean isValidNextPosition (Position newPosition) {
     if (newPosition.x == x) {
       return newPosition.y == y + 1 || newPosition.y == y - 1;
     } else if (newPosition.y == y) {
