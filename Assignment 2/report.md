@@ -1,4 +1,4 @@
-Tinco Andringa (s0159786)
+Tinco Andringa (s0159786) & Daniel Moscoviter (s0140155)
 
 System Validation Assignment 2
 ==============================
