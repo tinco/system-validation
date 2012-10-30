@@ -64,7 +64,9 @@ class GameGUI {
           else if (key == KeyEvent.VK_RIGHT) dx++;
           else if (key == KeyEvent.VK_LEFT) dx--;
           if (dx != 0 || dy != 0) {
-            if (game.movePlayer (new Position (game.player.position().x + dx, game.player.position (). y + dy))) {
+            int nx = game.player.position().x + dx;
+            int ny = game.player.position (). y + dy;
+            if (nx >=0 && nx < game.board.xSize && ny >=0 && ny < game.board.ySize && game.movePlayer (new Position (nx, ny))) {
               repaint ();
               if (!informed && game.wonGame ()) {
                 JOptionPane.showMessageDialog (MyPanel.this, "You won!");
