@@ -36,6 +36,11 @@ final class Game {
 
   /** @informal: Check for the win situation. Successful result implies
           all marked positions have to have boxes on top. */
+  /*@ ensures_redundantly
+    @     (\forall int x; 0 <= x && x < board.xSize;
+    @         (\forall int y; 0 <= y && y < board.ySize;
+    @             (board.items[x][y].isMarked () && !(board.items[x][y] instanceof Crate)) ==> !\result));
+    @*/
   boolean wonGame () {
     boolean result = true;
     for (int x = 0; x < board.xSize; x++) {
