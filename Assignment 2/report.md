@@ -345,3 +345,21 @@ space next to it, and if the opposite space is also free then it is not stuck ot
                    (board.items[x][y-1] instanceof Ground && board.items[x][y+1] instanceof Ground)
                   )) || !(board.items[x][y] instanceof Crate) ));
     */
+
+We then added the invariant that the game should never be stuck unless it is won.
+
+    //@ public invariant !gameWon ==> !gameStuck;
+
+In jmlrac, when all crates are pushed to the walls, it gives the following error:
+
+    org.jmlspecs.jmlrac.runtime.JMLInvariantError: by method Game.movePlayer@post<File "src/Game.java", line 101, character 15>
+
+Indicating that the invariant has been breached. A screenshot has been included:
+
+![Screenshot] (screenshot.png)
+
+To see wether a crate can't be moved anymore is easy to check like we did in the gameStuck representation. You loop over all crates, and see if there's ground left to it, if there is there should either be ground to the right of it or there should be ground above it. If there is ground above it and not left or right, then there should be ground below it. If this doesn't hold, then the crate is stuck.
+
+5. Test Generation
+----------------
+We ran out of time for test generation.
