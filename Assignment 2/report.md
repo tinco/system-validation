@@ -265,3 +265,5 @@ And specs to validate the correct function of the equals method.
 
     //@ requires o instanceof Position
     //@ ensures \result == ((Position)o).x == x && ((Position)o).y) == y
+
+
