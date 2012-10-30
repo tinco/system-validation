@@ -14,6 +14,14 @@
  * squares are covered by crates.
  */
 final class Game {
+  /*@ public model boolean gameWon;
+    @ private represents gameWon <-
+    @     (\forall int x; 0 <= x && x < board.xSize;
+    @         (\forall int y; 0 <= y && y < board.ySize;
+    @             (board.items[x][y].isMarked () && (board.items[x][y] instanceof Crate)) ||
+    @              !board.items[x][y].isMarked ()
+    @               ));
+  */
 
   /*@ spec_public */ /*@ non_null */ Board board;
   /*@ spec_public */ Player player;
@@ -36,11 +44,7 @@ final class Game {
 
   /** @informal: Check for the win situation. Successful result implies
           all marked positions have to have boxes on top. */
-  /*@ ensures
-    @     (\forall int x; 0 <= x && x < board.xSize;
-    @         (\forall int y; 0 <= y && y < board.ySize;
-    @             (board.items[x][y].isMarked () && !(board.items[x][y] instanceof Crate)) ==> !\result));
-    @*/
+  //@ ensures \result == gameWon;
   boolean wonGame () {
     boolean result = true;
     for (int x = 0; x < board.xSize; x++) {

@@ -298,3 +298,18 @@ And the position()
 
 4. Abstract Specifications
 ------------------------
+
+We added a model field called gameWon with a rewritten gameWon representation.
+
+    /*@ public model boolean gameWon;
+      @ private represents gameWon <-
+      @     (\forall int x; 0 <= x && x < board.xSize;
+      @         (\forall int y; 0 <= y && y < board.ySize;
+      @             (board.items[x][y].isMarked () && (board.items[x][y] instanceof Crate)) ||
+      @              !board.items[x][y].isMarked ()
+      @               ));
+    */
+
+And then rewrote the ensures for the wonGame method to read:
+
+    //@ ensures \result == gameWon;
