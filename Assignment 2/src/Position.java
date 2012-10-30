@@ -23,8 +23,8 @@ final class Position
   /** @informal: we only allow to compare to non null object of
          our own class. The comparison is successful if and only if both
          coordinates match. */
-  //@ requires o instanceof Position;
-  //@ ensures \result == ((Position)o).x == x && ((Position)o).y == y;
+  //@ also requires o instanceof Position;
+  //@ also ensures \result == (((Position)o).x == x && ((Position)o).y == y);
   public boolean equals (/*@ nullable @*/ Object o) {
     if (o instanceof Position) {
       Position q = (Position) o;
