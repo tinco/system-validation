@@ -58,6 +58,7 @@ final class Game {
   private boolean checkWonRow (BoardItem[] row) {
     boolean result = true;
 
+    //@ loop_invariant (y > -1);
     for (int y = 0; y < board.ySize; y++) {
       if (row[y].isMarked () && !(row[y] instanceof Crate)) {
         result = false;
