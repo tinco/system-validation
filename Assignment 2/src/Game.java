@@ -58,11 +58,13 @@ final class Game {
   /** @informal: Check for the win situation. Successful result implies
           all marked positions have to have boxes on top. */
   //@ ensures \result == gameWon;
+  //@ requires (\forall int x; 0 <= x && x < board.xSize; board.items[x] != null && board.items[x].length == board.ySize);
   boolean wonGame () {
     boolean result = true;
 
     //@ loop_invariant x >= 0;
     //@ loop_invariant board.items[x] != null;
+    //@ loop_invariant board.items[x].length == board.ySize;
     for (int x = 0; x < board.xSize; x++) {
       if (!checkWonRow (board.items[x])) {
         result = false;
