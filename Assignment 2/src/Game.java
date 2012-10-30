@@ -15,7 +15,7 @@
  */
 final class Game {
 
-  /*@ spec_public */ Board board;
+  /*@ spec_public */ /*@ non_null */ Board board;
   /*@ spec_public */ Player player;
 
   /** @informal: Some consistency properties:
