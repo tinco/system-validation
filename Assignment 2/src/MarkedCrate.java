@@ -9,6 +9,7 @@ public final class MarkedCrate extends Crate
   }
 
   /** @informal: this kind of crate is marked */
+  //@ also ensures \result == true; 
   public boolean isMarked () {
     return true;
   }

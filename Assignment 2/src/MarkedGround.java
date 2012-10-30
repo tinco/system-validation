@@ -9,6 +9,7 @@ public class MarkedGround extends Ground
   }
 
   /** @informal: this kind of crate is marked */
+  //@ also ensures \result == true; 
   public boolean isMarked () {
     return true;
   }

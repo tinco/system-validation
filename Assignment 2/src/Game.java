@@ -36,7 +36,7 @@ final class Game {
 
   /** @informal: Check for the win situation. Successful result implies
           all marked positions have to have boxes on top. */
-  /*@ ensures_redundantly
+  /*@ ensures
     @     (\forall int x; 0 <= x && x < board.xSize;
     @         (\forall int y; 0 <= y && y < board.ySize;
     @             (board.items[x][y].isMarked () && !(board.items[x][y] instanceof Crate)) ==> !\result));
@@ -74,9 +74,12 @@ final class Game {
   /** @informal: a successful move means that the position of the player
          was changed to the requested one. The method requires a
          valid next position. */
+  //@ requires player.position().isValidNextPosition(newPosition);
   boolean movePlayer (Position newPosition) {
 
     // @informal: Pre check that the new position is on the board.
+    //@ assert newPosition.x >= 0 && newPosition.x < board.xSize;
+    //@ assert newPosition.y >= 0 && newPosition.y < board.ySize;
 
     // If the new position is ground just move
     if (board.items[newPosition.x][newPosition.y].isCanStepOn ()) {
@@ -93,6 +96,7 @@ final class Game {
     //
     // @informal: make sure with a check that the target
     //   item on the board is indeed movable.
+    //@ assert board.items[newPosition.x][newPosition.y].isMovable()
 
     int xShift = newPosition.x - player.position ().x;
     int yShift = newPosition.y - player.position ().y;

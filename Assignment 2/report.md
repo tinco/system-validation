@@ -159,9 +159,9 @@ For the isMovable()
 
      //@ also ensures \result == false; 
 
-For the isMarked()
+For the isMarked() we also check if this is a regular instance of Crate.
 
-    //@ also ensures \result == false;
+  //@ also ensures getClass().getName() == "Crate" ==> \result == false;
 
 And the position()
 
@@ -178,5 +178,57 @@ Added some consistency properties for the player.
 Added an ensures to the constructor to check initialization.
 
     //@ ensures this.board == board && this.player == player;
+
+Implemented the ensures for the wonGame method.
+
+    @     (\forall int x; 0 <= x && x < board.xSize;
+    @         (\forall int y; 0 <= y && y < board.ySize;
+    @             (board.items[x][y].isMarked () && !(board.items[x][y] instanceof Crate)) ==> !\result));
+
+We added a requirement for the movePlayer that the newPosition should be valid, along with the 
+assertion that the position is on the board.
+
+    //@ requires player.position().isValidNextPosition(newPosition);
+    boolean movePlayer (Position newPosition) {
+      //@ assert newPosition.x >= 0 && newPosition.x < board.xSize;
+      //@ assert newPosition.y >= 0 && newPosition.y < board.ySize;
+
+We then added a check before the moving of an object that the object is movable.
+
+      //@ assert board.items[newPosition.x][newPosition.y].isMovable()
+
+### Ground.java
+
+Like with the Crate.java we added requirements and ensures for the basic properties and the constructor.
+
+    //@ ensures position == p;
+
+For the isCanStepOn()
+
+     //@ also ensures \result == true; 
+
+For the isMovable()
+
+     //@ also ensures \result == false; 
+
+For the isMarked(), checking that the class is just Ground.
+
+  //@ also ensures getClass().getName() == "Ground" ==> \result == false;
+
+And the position()
+
+    //@ also ensures \result == position;
+
+### MarkedCrate.java
+
+Here we added an ensures to isMarked() that checks that it always returns true.
+
+     //@ also ensures \result == true; 
+
+### MarkedGround.java
+
+Here we also added an ensures to isMarked() that checks that it always returns true.
+
+     //@ also ensures \result == true; 
 
 
