@@ -5,8 +5,8 @@ final class Position
 {
 
 
-  int x;
-  int y;
+  /*@ spec_public */ int x;
+  /*@ spec_public */ int y;
 
   /** @informal: the position canno be negative */
 

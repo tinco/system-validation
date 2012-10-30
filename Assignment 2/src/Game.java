@@ -15,16 +15,20 @@
  */
 final class Game {
 
-  Board board;
-  Player player;
+  /*@ spec_public */ Board board;
+  /*@ spec_public */ Player player;
 
   /** @informal: Some consistency properties:
     *   - A player has to be within the bounds of the board
     *   - A player can only stand on an "can stand on" board square 
     */
+  //@ public invariant player.position().x >= 0 && player.position().x < board.xSize;
+  //@ public invariant player.position().y >= 0 && player.position().y < board.ySize;
+  //@ public invariant board.items[player.position().x][player.position().y].isCanStepOn();
 
   /** @informal: Based on a board and a validly referenced player with respect to this
          board (see above) create new game with this board and player. */
+  //@ ensures this.board == board && this.player == player;
   Game (Board board, Player player) {
     this.board = board;
     this.player = player;

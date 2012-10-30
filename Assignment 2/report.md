@@ -147,7 +147,7 @@ the requirements are not correct an exception is thrown.
 
 Added an ensures that makes sure the position is set.
 
-    //@ also ensures position == p;
+    //@ ensures position == p;
 
 Added also ensures that give information about the properties of this crate.
 
@@ -166,3 +166,17 @@ For the isMarked()
 And the position()
 
     //@ also ensures \result == position;
+
+### Game.java
+
+Added some consistency properties for the player.
+
+    //@ public invariant player.position().x >= 0 && player.position().x < board.xSize;
+    //@ public invariant player.position().y >= 0 && player.position().y < board.ySize;
+    //@ public invariant board.items[player.position().x][player.position().y].isCanStepOn();
+
+Added an ensures to the constructor to check initialization.
+
+    //@ ensures this.board == board && this.player == player;
+
+
