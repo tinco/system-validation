@@ -8,7 +8,7 @@ final class Board {
 
   //@ public invariant xSize > 0 && ySize > 0;
 
-  /*@ spec_public */ BoardItem[][] items;
+  /*@ spec_public */ /*@ non_null */ BoardItem[][] items;
 
   /** @informal: The board contents has the right declared size
          and is completely filled with non null elements. Moreover,

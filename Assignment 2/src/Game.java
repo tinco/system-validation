@@ -47,6 +47,8 @@ final class Game {
   //@ ensures \result == gameWon;
   boolean wonGame () {
     boolean result = true;
+
+    //@ loop_invariant x >= 0;
     for (int x = 0; x < board.xSize; x++) {
       if (!checkWonRow (board.items[x])) {
         result = false;
