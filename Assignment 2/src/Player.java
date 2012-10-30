@@ -26,6 +26,7 @@ final class Player
          Then it gets the new position. */
   
   //@ requires position().isValidNextPosition(newPosition);
+  //@ ensures position == newPosition;
   public void setPosition (Position newPosition) {
     position = newPosition;
   }

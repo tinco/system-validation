@@ -193,6 +193,9 @@ assertion that the position is on the board.
       //@ assert newPosition.x >= 0 && newPosition.x < board.xSize;
       //@ assert newPosition.y >= 0 && newPosition.y < board.ySize;
 
+We discovered that the mouseClicked function of GameGUI breaches this contract. Since GameGUI is
+in charge of validating input, we left this bug in.
+
 We then added a check before the moving of an object that the object is movable.
 
       //@ assert board.items[newPosition.x][newPosition.y].isMovable();
@@ -231,4 +234,34 @@ Here we also added an ensures to isMarked() that checks that it always returns t
 
      //@ also ensures \result == true; 
 
+### Player.java
 
+We added a spec that ensures the player is constructed properly.
+
+    //@ ensures position == p;
+
+We added a spec that ensures the position is correctly returned.
+
+    //@ ensures \result == position;
+
+We added specs to the SetPosition method that guard against invalid next positions and ensure
+the position gets updated.
+
+    //@ requires position().isValidNextPosition(newPosition);
+    //@ ensures position == newPosition;
+
+### Position.java
+
+We added an invariant that says that the position is never negative.
+
+    //@ public invariant x > -1 && y > -1;
+
+Then added specs for the constructor, making sure it gets constructed properly.
+
+    //@ requires x > -1 && y > -1
+    //@ ensures this.x == x && this.y == y
+
+And specs to validate the correct function of the equals method.
+
+    //@ requires o instanceof Position
+    //@ ensures \result == ((Position)o).x == x && ((Position)o).y) == y

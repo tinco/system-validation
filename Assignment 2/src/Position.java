@@ -9,9 +9,12 @@ final class Position
   /*@ spec_public */ int y;
 
   /** @informal: the position canno be negative */
+  //@ public invariant x > -1 && y > -1;
 
   /** @informal: the constructed object has the given position values,
          that need to be valid in the first place. */
+  //@ requires x > -1 && y > -1;
+  //@ ensures this.x == x && this.y == y;
   Position (int x, int y) {
     this.x = x;
     this.y = y;
@@ -20,6 +23,8 @@ final class Position
   /** @informal: we only allow to compare to non null object of
          our own class. The comparison is successful if and only if both
          coordinates match. */
+  //@ requires o instanceof Position;
+  //@ ensures \result == ((Position)o).x == x && ((Position)o).y == y;
   public boolean equals (/*@ nullable @*/ Object o) {
     if (o instanceof Position) {
       Position q = (Position) o;
