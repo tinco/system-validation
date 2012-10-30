@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://beust.com/testng/testng-1.0.dtd" >
+
+<suite name="System Validation 2012 Homework 2" verbose="1">
+
+  <test name="movePlayer">
+    <classes>
+      <class name="Game_JML_Test" />
+      <methods>
+        <include name=".*racEnabled.*"/>
+        <include name=".*movePlayer.*"/>
+      </methods>
+    </classes>
+  </test>
+
+</suite>
