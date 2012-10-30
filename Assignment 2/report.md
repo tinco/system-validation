@@ -296,6 +296,24 @@ And the position()
 3. Static Checking
 -----------------
 
+We ran the escjava2 tool on checkWonRow, and the first warning it gave was that y could be negative. To solve this we added a loop_invariant that stated that y is always greater than -1.
+
+    //@ loop_invariant y >= 0;
+
+In addition, y could be too large. We solved this with a requires.
+
+    //@ requires row.length == board.ySize;
+
+Finally, there was the problem of rows possibly being null. We added a forall check to catch this error.
+
+    //@ requires (\forall int y; 0 <= y && y < board.ySize; row[y] != null);
+
+Then, we had to run the tool on gameWon. The first error and its fix were similar to the ones in checkWonRow.
+
+    //@ loop_invariant x >= 0;
+
+Due to time constraints we were not able to fix the remaining warnings.
+
 4. Abstract Specifications
 ------------------------
 
